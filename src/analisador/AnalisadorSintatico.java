@@ -1,3 +1,6 @@
+package analisador;
+import arvore.*;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 

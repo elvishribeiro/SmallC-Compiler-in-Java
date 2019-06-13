@@ -1,3 +1,4 @@
+package analisador;
 
 public class Simbolo {
 	private String tipo;
