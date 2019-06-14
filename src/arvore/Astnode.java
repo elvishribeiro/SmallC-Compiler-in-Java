@@ -3,13 +3,24 @@ package arvore;
 import java.util.ArrayList;
 
 public class Astnode {
-	private ArrayList<Astnode> filhos;
+	private ArrayList<Astnode> filhos = new ArrayList<Astnode>();
 	protected String nome;
 	protected String op;
 	protected int tipo;
 	protected String lexema;
 	protected float valor;
 	
+	public Astnode() {
+		this.nome = "Astnode";
+		this.op = null;
+		this.tipo = 0;
+		this.lexema = null;
+		this.valor = 0;
+	}
+	
+	public Astnode(String nome) {
+		this.nome = nome;
+	}
 	
 	public ArrayList<Astnode> getFilhos() {
 		return filhos;
@@ -46,5 +57,17 @@ public class Astnode {
 	}
 	public void setValor(float valor) {
 		this.valor = valor;
+	}
+	
+	public void addFilho(Astnode filho) {
+		filhos.add(filho);
+	}
+	public String toString() {
+		String retorno = nome + "->" ;
+		for (Astnode a : filhos) {
+			retorno += a.toString() + " - ";
+		}
+		retorno += "\n";
+		return retorno;
 	}
 }

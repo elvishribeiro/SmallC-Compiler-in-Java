@@ -30,7 +30,7 @@ public class AnalisadorLexico {
 		Scanner reader = new Scanner(file);
 		char c = '\0';
 		boolean ler = true;
-		int linha = 0;
+		int linha = 1;
 		int state = 0;
 		String lexema = "";
 		ArrayList<Token> tokens = new ArrayList<Token>();

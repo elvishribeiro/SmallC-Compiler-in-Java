@@ -5,6 +5,12 @@ public class If extends Astnode{
 	private Astnode c_true;
 	private Astnode c_false;
 	
+	public If() {
+		this.nome = "If";
+		this.e = null;
+		this.c_true = null;
+		this.c_false = null;
+	}
 	
 	public Expr getE() {
 		return e;
@@ -23,5 +29,18 @@ public class If extends Astnode{
 	}
 	public void setC_false(Astnode c_false) {
 		this.c_false = c_false;
+	}
+	public void addFilho(Astnode filho) {
+		if (c_true == null) {			//se o verdadeiro ainda nao foi definido então é pra ele
+			c_true = filho;
+		}else {
+			c_false = filho;
+		}
+	}
+	
+	public String toString () {
+		String resultado = "";
+		resultado += e + " - " + c_true + " - " + c_false;
+		return resultado;
 	}
 }

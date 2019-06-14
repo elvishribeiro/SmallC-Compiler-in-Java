@@ -3,6 +3,12 @@ package arvore;
 public class ArithOp extends Expr{
 	private Expr expr1;
 	private Expr expr2;
+
+	public ArithOp(){
+		this.expr1 = null;
+		this.expr2 = null;
+		this.nome = "ArithOp";
+	}
 	
 	public Expr getExpr1() {
 		return expr1;

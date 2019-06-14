@@ -13,6 +13,8 @@ public class AnalisadorSintatico {
 	private Token tokenEntrada;
 	private Integer i = 0;
 	private String tipo;
+	private Astnode raiz;
+	
 
 	private AnalisadorSintatico() {}
 
@@ -33,63 +35,70 @@ public class AnalisadorSintatico {
 		casa("LBRACKET");
 		casa("RBRACKET");
 		casa("LBRACE");
-		decl_Comando();
+		raiz = new Astnode();
+		decl_Comando(raiz);
 		casa("RBRACE");
 	}
 	
-	private void declaracao(){
-		//printf("Declaracao-> Tipo ID Decl2-> "); //remover
-		tipo = tipo();
-		Token tokenBackup = tokenEntrada;
-		//insere na tabela de simbolos
-
-		if (casa("ID")){
-			if (!tabelaSimbolos.containsKey(tokenBackup.getLexema())){
-					Simbolo s = new Simbolo(tipo, tokenBackup.getLexema(), tokenBackup.getLinha());
-					tabelaSimbolos.put(s.getLexema(), s);
-			}else{
-				System.out.println("REDECLARACAO DE " + tokenBackup.getLexema());
-			}
-		}
-		decl2();
-		tipo = null;
-	}
-
-	private void decl_Comando() {
+	private void decl_Comando(Astnode pai) {
 		// printf("Decl_Comando-> "); //remover
 		if (tokenEntrada.getNome().equals("INT") || tokenEntrada.getNome().equals("FLOAT")) {
-			declaracao();
-			decl_Comando();
+			declaracao(pai);
+			decl_Comando(pai);
 		} else if (tokenEntrada.getNome().equals("LBRACE") || tokenEntrada.getNome().equals("ID")
 				|| tokenEntrada.getNome().equals("IF") || tokenEntrada.getNome().equals("WHILE")
 				|| tokenEntrada.getNome().equals("READ") || tokenEntrada.getNome().equals("PRINT")
 				|| tokenEntrada.getNome().equals("FOR")) {
-			comando();
-			decl_Comando();
+			comando(pai);
+			decl_Comando(pai);
 		} else {}
 	}
 	
-	private void decl2(){
+	private void declaracao(Astnode pai){
+		//printf("Declaracao-> Tipo ID Decl2-> "); //remover
+		tipo = tipo();
+		
+		Token tokenBackup = tokenEntrada;
+		//insere na tabela de simbolos
+		Id noId = null;
+		if (casa("ID")){
+			if (!tabelaSimbolos.containsKey(tokenBackup.getLexema())){
+					Simbolo s = new Simbolo(tipo, tokenBackup.getLexema(), tokenBackup.getLinha());
+					tabelaSimbolos.put(s.getLexema(), s);
+					noId = new Id(s);
+			}else{
+				System.out.println("REDECLARACAO DE " + tokenBackup.getLexema());
+			}
+		}
+		decl2(pai, noId);
+		tipo = null;
+	}
+
+	
+	private void decl2(Astnode pai, Id noId){
 		//printf("Decl2-> "); //remover
 		if (tokenEntrada.getNome().equals("COMMA")){
 			casa("COMMA");
 			Token tokenBackup = tokenEntrada;
-
+			
 			if (casa("ID")){
 				if (!tabelaSimbolos.containsKey(tokenBackup.getLexema())){
 					Simbolo s = new Simbolo(tipo, tokenBackup.getLexema(), tokenBackup.getLinha());
 					tabelaSimbolos.put(s.getLexema(), s);
+					noId.setSimbolo(s);
 				}else{
 					System.out.println("REDECLARACAO DE " + tokenBackup.getLexema());
 				}
 			}
-			decl2();
+			decl2(pai, noId);
 		}else if(tokenEntrada.getNome().equals("PCOMMA")){
 			casa("PCOMMA");
 		}else if(tokenEntrada.getNome().equals("ATTR")){
 			casa("ATTR");
-			expressao();
-			decl2();
+			Expr e = null;	expressao();
+			Attr a = new Attr(noId, e);
+			pai.addFilho(a);
+			decl2(pai, noId);
 		}else{
 			//printf("Missing identifier before ->");
 		}
@@ -108,105 +117,141 @@ public class AnalisadorSintatico {
 		return null;
 	}
 	
-	private void comando(){
+	private void comando(Astnode pai){
 		//printf("Comando->"); //remover
 		if (tokenEntrada.getNome().equals("LBRACE"))
-			bloco();
+			bloco(pai);
 		else if (tokenEntrada.getNome().equals("ID"))
-			atribuicao();
+			atribuicao(pai);
 		else if (tokenEntrada.getNome().equals("IF"))
-			comandoSe();
+			comandoSe(pai);
 		else if (tokenEntrada.getNome().equals("WHILE"))
-			comandoEnquanto();
+			comandoEnquanto(pai);
 		else if (tokenEntrada.getNome().equals("READ"))
-			comandoRead();
+			comandoRead(pai);
 		else if (tokenEntrada.getNome().equals("PRINT"))
-			comandoPrint();
+			comandoPrint(pai);
 		else if (tokenEntrada.getNome().equals("FOR"))
-			comandoFor();
+			comandoFor(pai);
 	}
-	private void bloco(){
+	
+	private void bloco(Astnode pai){
 		//printf("Bloco-> "); //remover
 		casa("LBRACE");
-		decl_Comando();
+		Astnode bloco = new Astnode("Bloco");
+		decl_Comando(bloco);
 		casa("RBRACE");
+		pai.addFilho(bloco);
 	}
 
-	private void atribuicao(){
+	private void atribuicao(Astnode pai){
 		//printf("Atribuicao-> "); //remover
+		Simbolo s = tabelaSimbolos.get(tokenEntrada.getLexema());
 		casa("ID");
+		Id noId = new Id(s);
 		casa("ATTR");
-		expressao();
+		Expr e = null; expressao();
 		casa("PCOMMA");
+		Attr a = new Attr(noId, e);
+		pai.addFilho(a);
 	}
 
-	private void comandoSe(){
+	private void comandoSe(Astnode pai){
 		//printf("ComandoSe-> "); //remover
 		casa("IF");
 		casa("LBRACKET");
-		expressao();
+		If noIf = new If();
+		Expr e = null; expressao();
 		casa("RBRACKET");
-		comando();
-		comandoSenao();
+		noIf.setE(e);
+		comando(noIf);
+		comandoSenao(noIf);
+		pai.addFilho(noIf);
 	}
 
-	private void comandoSenao(){
+	private void comandoSenao(Astnode pai){
 		//printf("ComandoSenao-> "); //remover
 		if (tokenEntrada.getNome().equals("ELSE")){
 			casa("ELSE");
-			comando();
+			comando(pai);
 		}
 	}
 
-	private void comandoEnquanto(){
+	private void comandoEnquanto(Astnode pai){
 		//printf("ComandoEnquanto-> "); //remover
 		casa("WHILE");
 		casa("LBRACKET");
-		expressao();
+		While noWhile = new While();
+		Expr e = null; expressao();
+		noWhile.setE(e);
 		casa("RBRACKET");
-		comando();
+		comando(noWhile);
+		pai.addFilho(noWhile);		
 	}
 
-	private void comandoRead(){
+	private void comandoRead(Astnode pai){
 		//printf("ComandoRead-> "); //remover
+		Simbolo s = tabelaSimbolos.get(tokenEntrada.getLexema());
+
 		casa("READ");
+		Read noRead = new Read();
+		Id noId = new Id();
+		noId.setSimbolo(s);
 		casa("ID");
+		noRead.setId(noId);
 		casa("PCOMMA");
+		pai.addFilho(noRead);
 	}
 
-	private void comandoPrint(){
+	private void comandoPrint(Astnode pai){
 		//printf("ComandoPrint-> "); //remover
+		Print noPrint = new Print();
 		casa("PRINT");
 		casa("LBRACKET");
-		expressao();
+		Expr e = null; expressao();
 		casa("RBRACKET");
+		noPrint.setE(e);
 		casa("PCOMMA");
+		pai.addFilho(noPrint);
 	}
 
-	private void comandoFor(){
+	private void comandoFor(Astnode pai){
 		//printf("ComandoFor-> "); //remover
+		For noFor = new For();
 		casa("FOR");
 		casa("LBRACKET");
-		atribuicaoFor();
+		Attr a = atribuicaoFor(noFor);
 		casa("PCOMMA");
-		expressao();
+		noFor.setIni(a);
+
+		Expr e = null; expressao();
 		casa("PCOMMA");
-		atribuicaoFor();
+		noFor.setCondicao(e);
+
+		a = atribuicaoFor(noFor);
 		casa("RBRACKET");
-		comando();
+		noFor.setInc(a);
+
+		comando(noFor);
 	}
 	
-	private void atribuicaoFor(){
+	private Attr atribuicaoFor(){
 		//printf("AtribuicaoFor-> "); //remover
+		Simbolo s = tabelaSimbolos.get(tokenEntrada.getLexema());
+		Id noId = new Id();
 		casa("ID");
+		noId.setSimbolo(s);
 		casa("ATTR");
-		expressao();
+		Expr e = null; expressao();
+		Attr a = new Attr(noId, e);
+		return a;
 	}
 
 	private void expressao(){
 		//printf("Expressao ->"); //remover
 		adicao();
 		relacaoOpc();
+		
 	}
 	
 	private void relacaoOpc(){

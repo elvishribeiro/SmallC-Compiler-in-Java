@@ -4,6 +4,11 @@ public class RelOp extends Expr{
 	private Expr expr1;
 	private Expr expr2;
 	
+	public RelOp(){
+		this.expr1 = null;
+		this.expr2 = null;
+		this.nome = "RelOp";
+	}
 	
 	public Expr getExpr1() {
 		return expr1;

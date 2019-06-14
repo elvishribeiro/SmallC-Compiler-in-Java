@@ -6,6 +6,15 @@ public class For extends Astnode {
 	private Attr inc;
 	private Astnode c_true;
 
+	public For(){
+		this.nome = "For";
+		this.ini = null;
+		this.condicao = null;
+		this.inc = null;
+		this.c_true = null;
+
+	}
+
 	public Attr getIni() {
 		return ini;
 	}
@@ -36,5 +45,9 @@ public class For extends Astnode {
 
 	public void setC_true(Astnode c_true) {
 		this.c_true = c_true;
+	}
+
+	public void addFilho(Astnode filho){
+		this.c_true = filho;
 	}
 }

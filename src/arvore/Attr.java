@@ -3,6 +3,20 @@ package arvore;
 public class Attr extends Astnode{
 	private Id id;
 	private Expr e;
+	
+	public Attr() {
+		this.nome = "Attr";
+		this.id = null;
+		this.e = null;
+
+	}
+	
+	public Attr(Id id, Expr e) {
+		this.nome = this.getClass().getName();
+		this.id = id;
+		this.e = e;
+	}
+	
 	public Id getId() {
 		return id;
 	}
