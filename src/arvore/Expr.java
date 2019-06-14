@@ -1,5 +1,5 @@
 package arvore;
 
-public abstract class Expr extends Astnode{
+public class Expr extends Astnode{
 	
 }
