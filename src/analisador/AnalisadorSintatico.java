@@ -210,7 +210,7 @@ public class AnalisadorSintatico {
 		casa("LBRACKET");
 		Expr e = null; expressao();
 		casa("RBRACKET");
-		noPrint.setE(e);
+		// noPrint.setE(e);
 		casa("PCOMMA");
 		pai.addFilho(noPrint);
 	}
@@ -220,7 +220,7 @@ public class AnalisadorSintatico {
 		For noFor = new For();
 		casa("FOR");
 		casa("LBRACKET");
-		Attr a = atribuicaoFor(noFor);
+		Attr a = atribuicaoFor();
 		casa("PCOMMA");
 		noFor.setIni(a);
 
@@ -228,7 +228,7 @@ public class AnalisadorSintatico {
 		casa("PCOMMA");
 		noFor.setCondicao(e);
 
-		a = atribuicaoFor(noFor);
+		a = atribuicaoFor();
 		casa("RBRACKET");
 		noFor.setInc(a);
 
@@ -249,10 +249,19 @@ public class AnalisadorSintatico {
 
 	private void expressao(){
 		//printf("Expressao ->"); //remover
-		adicao();
+		ArithOp noArithOp = new ArithOp();
+		adicao(noArithOp);
 		relacaoOpc();
 		
 	}
+	
+	public void adicao(ArithOp pai){
+		ArithOp noArithOp = new ArithOp();
+		noArithOp.setExpr1(termo());
+		noArithOp.setExpr2(adicaoOpc());
+		pai.addFilho(filho);
+	}
+
 	
 	private void relacaoOpc(){
 		if (tokenEntrada.getNome().equals("LT") || tokenEntrada.getNome().equals("LE") || 
@@ -277,11 +286,6 @@ public class AnalisadorSintatico {
 			casa("EQ");
 	}
 	
-	public void adicao(){
-		termo();
-		adicaoOpc();
-	}
-
 	public void adicaoOpc(){
 		if (tokenEntrada.getNome().equals("PLUS") || tokenEntrada.getNome().equals("MINUS")){
 			opAdicao();
@@ -298,36 +302,58 @@ public class AnalisadorSintatico {
 	}
 
 	public void termo(){
-		fator();
-		termoOpc();
+		ArithOp noArithOp = new ArithOp();
+		noArithOp.setExpr1(fator());
+		noArithOp.setExpr2(termoOpc(noArithOp));
 	}
 	
-	public void termoOpc(){
+	public Expr termoOpc(ArithOp noArithOp){
 		if (tokenEntrada.getNome().equals("MULT") || tokenEntrada.getNome().equals("DIV")){
-			opMult();
-			fator();
+			opMult(noArithOp);
+			Expr noExpr = new Expr();
+			noExpr.fator();
 			termoOpc();
+			return noExpr;
 		}else{}
 	}
 
-	public void opMult(){
-		if (tokenEntrada.getNome().equals("MULT"))
+	public void opMult(ArithOp noArithOp){
+		if (tokenEntrada.getNome().equals("MULT")) {
 			casa("MULT");
-		else if (tokenEntrada.getNome().equals("DIV"))
+			noArithOp.setOp("*");
+		}
+		else if (tokenEntrada.getNome().equals("DIV")) {
 			casa("DIV");
+		    noArithOp.setOp("/");
+		}
 	}
 
-	public void fator(){
-		if (tokenEntrada.getNome().equals("ID"))
+	public Expr fator(){
+		
+		if (tokenEntrada.getNome().equals("ID")) {
+			Simbolo simbolo;
+			simbolo = tabelaSimbolos.get(tokenEntrada.getLexema());
 			casa("ID");
-		else if (tokenEntrada.getNome().equals("INTEGER_CONST"))
+			Id noId = new Id(simbolo);
+			return noId;
+		}
+		else if (tokenEntrada.getNome().equals("INTEGER_CONST")) {
+			float valor = Float.parseFloat(tokenEntrada.getLexema());
 			casa("INTEGER_CONST");
-		else if (tokenEntrada.getNome().equals("FLOAT_CONST"))
+			Num noNum = new Num(valor, 0);
+			return noNum;
+		}
+		else if (tokenEntrada.getNome().equals("FLOAT_CONST")) {
+			float valor = Float.parseFloat(tokenEntrada.getLexema());
 			casa("FLOAT_CONST");
+			Num noNum = new Num(valor, 1);
+			return noNum;
+		}
 		else if (tokenEntrada.getNome().equals("LBRACKET")){
 			casa("LBRACKET");
-			expressao();
+			Expr e = expressao();
 			casa("RBRACKET");
+			return e;
 		}
 	}
 	
