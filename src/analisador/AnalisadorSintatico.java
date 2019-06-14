@@ -95,7 +95,7 @@ public class AnalisadorSintatico {
 			casa("PCOMMA");
 		}else if(tokenEntrada.getNome().equals("ATTR")){
 			casa("ATTR");
-			Expr e = null;	expressao();
+			Expr e = expressao();
 			Attr a = new Attr(noId, e);
 			pai.addFilho(a);
 			decl2(pai, noId);
@@ -150,7 +150,7 @@ public class AnalisadorSintatico {
 		casa("ID");
 		Id noId = new Id(s);
 		casa("ATTR");
-		Expr e = null; expressao();
+		Expr e = expressao();
 		casa("PCOMMA");
 		Attr a = new Attr(noId, e);
 		pai.addFilho(a);
@@ -161,7 +161,7 @@ public class AnalisadorSintatico {
 		casa("IF");
 		casa("LBRACKET");
 		If noIf = new If();
-		Expr e = null; expressao();
+		Expr e = expressao();
 		casa("RBRACKET");
 		noIf.setE(e);
 		comando(noIf);
@@ -182,7 +182,7 @@ public class AnalisadorSintatico {
 		casa("WHILE");
 		casa("LBRACKET");
 		While noWhile = new While();
-		Expr e = null; expressao();
+		Expr e = expressao();
 		noWhile.setE(e);
 		casa("RBRACKET");
 		comando(noWhile);
@@ -208,7 +208,7 @@ public class AnalisadorSintatico {
 		Print noPrint = new Print();
 		casa("PRINT");
 		casa("LBRACKET");
-		Expr e = null; expressao();
+		Expr e = expressao();
 		casa("RBRACKET");
 		// noPrint.setE(e);
 		casa("PCOMMA");
@@ -224,7 +224,7 @@ public class AnalisadorSintatico {
 		casa("PCOMMA");
 		noFor.setIni(a);
 
-		Expr e = null; expressao();
+		Expr e = expressao();
 		casa("PCOMMA");
 		noFor.setCondicao(e);
 
@@ -242,89 +242,114 @@ public class AnalisadorSintatico {
 		casa("ID");
 		noId.setSimbolo(s);
 		casa("ATTR");
-		Expr e = null; expressao();
+		Expr e = expressao();
 		Attr a = new Attr(noId, e);
 		return a;
 	}
 
-	private void expressao(){
+	private Expr expressao(){
 		//printf("Expressao ->"); //remover
-		ArithOp noArithOp = new ArithOp();
-		adicao(noArithOp);
-		relacaoOpc();
-		
+		ArithOp noArithOp = adicao();
+		RelOp noRelOp = new RelOp();
+		noRelOp.setExpr1(noArithOp);
+		noRelOp.setExpr2(relacaoOpc(noRelOp));
+		if (noRelOp != null) {
+		    return noRelOp; 
+		}
+		return noArithOp;
 	}
 	
-	public void adicao(ArithOp pai){
+	public ArithOp adicao(){
 		ArithOp noArithOp = new ArithOp();
 		noArithOp.setExpr1(termo());
-		noArithOp.setExpr2(adicaoOpc());
-		pai.addFilho(filho);
+		noArithOp.setExpr2(adicaoOpc(noArithOp));
+		return noArithOp;
 	}
 
 	
-	private void relacaoOpc(){
+	private RelOp relacaoOpc(RelOp pai){
 		if (tokenEntrada.getNome().equals("LT") || tokenEntrada.getNome().equals("LE") || 
 			tokenEntrada.getNome().equals("GT") || tokenEntrada.getNome().equals("GE") ||
 			tokenEntrada.getNome().equals("EQ")){
-			opRel();
-			adicao();
-			relacaoOpc();
-		}else{}
+			opRel(pai);
+			RelOp noRelOp = new RelOp();
+			noRelOp.setExpr1(adicao());
+			noRelOp.setExpr2(relacaoOpc(noRelOp));
+			return noRelOp;
+		}else{return null;}
 	}
 
-	private void opRel(){
-		if (tokenEntrada.getNome().equals("LT"))
+	private void opRel(RelOp pai){
+		if (tokenEntrada.getNome().equals("LT")) {
 			casa("LT");
-		else if (tokenEntrada.getNome().equals("LE"))
+		    pai.setOp("<");
+		}
+		else if (tokenEntrada.getNome().equals("LE")) {
 			casa("LE");
-		else if (tokenEntrada.getNome().equals("GT"))
+			pai.setOp("<=");
+		}
+		else if (tokenEntrada.getNome().equals("GT")) {
 			casa("GT");
-		else if (tokenEntrada.getNome().equals("GE"))
+			pai.setOp(">");
+		}
+		else if (tokenEntrada.getNome().equals("GE")) {
 			casa("GE");
-		else if (tokenEntrada.getNome().equals("EQ"))
+			pai.setOp(">=");
+		}
+		else if (tokenEntrada.getNome().equals("EQ")) {
 			casa("EQ");
+			pai.setOp("==");
+		}
 	}
 	
-	public void adicaoOpc(){
+	public ArithOp adicaoOpc(ArithOp pai){
 		if (tokenEntrada.getNome().equals("PLUS") || tokenEntrada.getNome().equals("MINUS")){
-			opAdicao();
-			termo();
-			adicaoOpc();
+			opAdicao(pai);
+			ArithOp noArithOp = new ArithOp();
+			noArithOp.setExpr1(termo());
+			noArithOp.setExpr2(adicaoOpc(noArithOp));
+			return noArithOp;
 		}else{}
+		return null;
 	}
 
-	public void opAdicao(){
-		if (tokenEntrada.getNome().equals("PLUS"))
+	public void opAdicao(ArithOp pai){
+		if (tokenEntrada.getNome().equals("PLUS")) {
 			casa("PLUS");
-		else if (tokenEntrada.getNome().equals("MINUS"))
+			pai.setOp("+");
+		}
+		else if (tokenEntrada.getNome().equals("MINUS")) {
 			casa("MINUS");
+		    pai.setOp("i");
+		}
 	}
 
-	public void termo(){
+	public ArithOp termo(){
 		ArithOp noArithOp = new ArithOp();
 		noArithOp.setExpr1(fator());
 		noArithOp.setExpr2(termoOpc(noArithOp));
+		return noArithOp;
 	}
 	
-	public Expr termoOpc(ArithOp noArithOp){
+	public ArithOp termoOpc(ArithOp pai){
 		if (tokenEntrada.getNome().equals("MULT") || tokenEntrada.getNome().equals("DIV")){
-			opMult(noArithOp);
-			Expr noExpr = new Expr();
-			noExpr.fator();
-			termoOpc();
-			return noExpr;
+			opMult(pai);
+			ArithOp noArithOp = new ArithOp();
+			noArithOp.setExpr1(fator());
+			noArithOp.setExpr2(termoOpc(noArithOp));
+			return noArithOp;
 		}else{}
+		return null;
 	}
 
-	public void opMult(ArithOp noArithOp){
+	public void opMult(ArithOp pai){
 		if (tokenEntrada.getNome().equals("MULT")) {
 			casa("MULT");
-			noArithOp.setOp("*");
+			pai.setOp("*");
 		}
 		else if (tokenEntrada.getNome().equals("DIV")) {
 			casa("DIV");
-		    noArithOp.setOp("/");
+		    pai.setOp("/");
 		}
 	}
 
@@ -355,6 +380,7 @@ public class AnalisadorSintatico {
 			casa("RBRACKET");
 			return e;
 		}
+		return null;
 	}
 	
 	private boolean casa(String tokenEsperado) {
