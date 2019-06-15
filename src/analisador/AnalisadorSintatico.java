@@ -249,34 +249,51 @@ public class AnalisadorSintatico {
 
 	private Expr expressao(){
 		//printf("Expressao ->"); //remover
-		ArithOp noArithOp = adicao();
+		Expr noExpr = adicao();
 		RelOp noRelOp = new RelOp();
-		noRelOp.setExpr1(noArithOp);
+		noRelOp.setExpr1(noExpr);
 		noRelOp.setExpr2(relacaoOpc(noRelOp));
-		if (noRelOp != null) {
+		
+		if (noRelOp.getExpr2() != null) {			//se nao tem opicional retorna apenas o adicao
 		    return noRelOp; 
 		}
-		return noArithOp;
+		return noExpr;
 	}
 	
-	public ArithOp adicao(){
+	public Expr adicao(){
 		ArithOp noArithOp = new ArithOp();
-		noArithOp.setExpr1(termo());
-		noArithOp.setExpr2(adicaoOpc(noArithOp));
-		return noArithOp;
+		Expr expr1 = termo();
+		noArithOp.setExpr1(expr1);
+		Expr expr2 = adicaoOpc(noArithOp);
+		noArithOp.setExpr2(expr2);
+		
+		if (expr2 == null) 			//se nao tem opicional retorna somente o termo
+			return expr1;
+		else
+			return noArithOp;
 	}
 
 	
-	private RelOp relacaoOpc(RelOp pai){
+	private Expr relacaoOpc(RelOp pai){
 		if (tokenEntrada.getNome().equals("LT") || tokenEntrada.getNome().equals("LE") || 
 			tokenEntrada.getNome().equals("GT") || tokenEntrada.getNome().equals("GE") ||
 			tokenEntrada.getNome().equals("EQ")){
 			opRel(pai);
 			RelOp noRelOp = new RelOp();
-			noRelOp.setExpr1(adicao());
-			noRelOp.setExpr2(relacaoOpc(noRelOp));
-			return noRelOp;
-		}else{return null;}
+			Expr expr1 = adicao();
+			noRelOp.setExpr1(expr1);
+			
+			Expr expr2 = relacaoOpc(noRelOp);
+			noRelOp.setExpr2(expr2);
+			
+			if (expr2 == null)
+				return expr1;
+			else
+				return noRelOp;
+		}
+		else{
+			return null;
+		}
 	}
 
 	private void opRel(RelOp pai){
@@ -302,13 +319,21 @@ public class AnalisadorSintatico {
 		}
 	}
 	
-	public ArithOp adicaoOpc(ArithOp pai){
+	public Expr adicaoOpc(ArithOp pai){
 		if (tokenEntrada.getNome().equals("PLUS") || tokenEntrada.getNome().equals("MINUS")){
 			opAdicao(pai);
 			ArithOp noArithOp = new ArithOp();
-			noArithOp.setExpr1(termo());
-			noArithOp.setExpr2(adicaoOpc(noArithOp));
-			return noArithOp;
+			Expr expr1 = fator();
+			noArithOp.setExpr1(expr1);
+			
+			Expr expr2 = termoOpc(noArithOp);
+			noArithOp.setExpr2(expr2);
+			
+			if (expr2 == null) {
+				return expr1;
+			}else {
+				return noArithOp;
+			}
 		}else{}
 		return null;
 	}
@@ -324,22 +349,39 @@ public class AnalisadorSintatico {
 		}
 	}
 
-	public ArithOp termo(){
+	public Expr termo(){
 		ArithOp noArithOp = new ArithOp();
-		noArithOp.setExpr1(fator());
-		noArithOp.setExpr2(termoOpc(noArithOp));
-		return noArithOp;
+		Expr expr1 = fator();
+		noArithOp.setExpr1(expr1);
+		
+		Expr expr2 = termoOpc(noArithOp);
+		noArithOp.setExpr2(expr2);
+		
+		if (expr2 == null) {
+			return expr1;
+		}else {
+			return noArithOp;
+		}
 	}
 	
-	public ArithOp termoOpc(ArithOp pai){
+	public Expr termoOpc(ArithOp pai){
 		if (tokenEntrada.getNome().equals("MULT") || tokenEntrada.getNome().equals("DIV")){
 			opMult(pai);
 			ArithOp noArithOp = new ArithOp();
-			noArithOp.setExpr1(fator());
-			noArithOp.setExpr2(termoOpc(noArithOp));
-			return noArithOp;
-		}else{}
-		return null;
+			Expr expr1 = fator();
+			noArithOp.setExpr1(expr1);
+			
+			Expr expr2 = termoOpc(noArithOp);
+			noArithOp.setExpr2(expr2);
+			
+			if (expr2 == null) {
+				return expr1;
+			}else {
+				return noArithOp;
+			}
+		}else {
+			return null;
+		}
 	}
 
 	public void opMult(ArithOp pai){

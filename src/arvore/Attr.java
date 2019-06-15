@@ -29,4 +29,6 @@ public class Attr extends Astnode{
 	public void setE(Expr e) {
 		this.e = e;
 	}
+	
+	
 }
