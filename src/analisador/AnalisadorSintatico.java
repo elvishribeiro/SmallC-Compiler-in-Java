@@ -334,8 +334,9 @@ public class AnalisadorSintatico {
 			}else {
 				return noArithOp;
 			}
-		}else{}
-		return null;
+		}else{
+			return null;
+		}
 	}
 
 	public void opAdicao(ArithOp pai){
@@ -345,7 +346,7 @@ public class AnalisadorSintatico {
 		}
 		else if (tokenEntrada.getNome().equals("MINUS")) {
 			casa("MINUS");
-		    pai.setOp("i");
+		    pai.setOp("-");
 		}
 	}
 
