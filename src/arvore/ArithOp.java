@@ -3,11 +3,14 @@ package arvore;
 public class ArithOp extends Expr{
 	private Expr expr1;
 	private Expr expr2;
+	protected String op;
+
 
 	public ArithOp(){
 		this.expr1 = null;
 		this.expr2 = null;
 		this.nome = "ArithOp";
+		this.op = null;
 	}
 	
 	public Expr getExpr1() {
@@ -21,5 +24,12 @@ public class ArithOp extends Expr{
 	}
 	public void setExpr2(Expr expr2) {
 		this.expr2 = expr2;
+	}
+	
+	public String getOp() {
+		return op;
+	}
+	public void setOp(String op) {
+		this.op = op;
 	}
 }
