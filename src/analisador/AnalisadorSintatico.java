@@ -1,6 +1,5 @@
 package analisador;
 import arvore.*;
-
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -38,6 +37,9 @@ public class AnalisadorSintatico {
 		raiz = new Astnode();
 		decl_Comando(raiz);
 		casa("RBRACE");
+		//System.out.println(raiz.getFilhos());
+		String a  = raiz.geraArvore(0);
+		System.out.println(a);
 	}
 	
 	private void decl_Comando(Astnode pai) {
@@ -233,6 +235,7 @@ public class AnalisadorSintatico {
 		noFor.setInc(a);
 
 		comando(noFor);
+		pai.addFilho(noFor);
 	}
 	
 	private Attr atribuicaoFor(){
@@ -334,8 +337,9 @@ public class AnalisadorSintatico {
 			}else {
 				return noArithOp;
 			}
-		}else{}
-		return null;
+		}else{
+			return null;
+		}
 	}
 
 	public void opAdicao(ArithOp pai){
@@ -345,7 +349,7 @@ public class AnalisadorSintatico {
 		}
 		else if (tokenEntrada.getNome().equals("MINUS")) {
 			casa("MINUS");
-		    pai.setOp("i");
+		    pai.setOp("-");
 		}
 	}
 

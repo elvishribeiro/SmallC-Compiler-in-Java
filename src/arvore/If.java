@@ -37,6 +37,19 @@ public class If extends Astnode{
 			c_false = filho;
 		}
 	}
+
+	public String geraArvore(int nivel){
+		String arvore = "";
+		for (int i = 0; i < nivel*4; i++) arvore+=" ";
+		arvore+= "<If>\n";
+		arvore+= e.geraArvore(nivel + 1);
+		arvore+= c_true.geraArvore(nivel + 1);
+		arvore+= c_false.geraArvore(nivel + 1);
+		for (int i = 0; i < nivel*4; i++) arvore+=" ";
+		arvore+= "</If>\n";
+		return arvore;
+	}
+
 	
 	public String toString () {
 		String resultado = "";

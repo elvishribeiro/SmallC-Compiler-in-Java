@@ -10,8 +10,7 @@ public class Compilador {
 		ArrayList<Token> tokens = al.analisa();
 		printTokens(tokens);
 		Hashtable<String, Simbolo> tabelaSimbolo = as.analisa(tokens);
-		System.out.println(tabelaSimbolo);
-		
+		System.out.println(tabelaSimbolo);		
 	}
 	
 	public static void printTokens(ArrayList<Token> tokens) {

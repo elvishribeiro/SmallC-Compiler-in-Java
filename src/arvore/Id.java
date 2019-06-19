@@ -25,4 +25,11 @@ public class Id extends Expr{
 	public String toString() {
 		return nome;
 	}
+
+	public String geraArvore(int nivel){
+		String arvore = "";
+		for (int i = 0; i < nivel*4; i++) arvore+=" ";
+		arvore+= "<Id lexema='"+ simbolo.getLexema() + "' type='" +simbolo.getTipo() + "'/>\n";
+		return arvore;
+	}
 }

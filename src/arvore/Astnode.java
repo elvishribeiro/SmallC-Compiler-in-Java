@@ -5,17 +5,9 @@ import java.util.ArrayList;
 public class Astnode {
 	private ArrayList<Astnode> filhos = new ArrayList<Astnode>();
 	protected String nome;
-	protected String op;
-	protected int tipo;
-	protected String lexema;
-	protected float valor;
 	
 	public Astnode() {
 		this.nome = "Astnode";
-		this.op = null;
-		this.tipo = 0;
-		this.lexema = null;
-		this.valor = 0;
 	}
 	
 	public Astnode(String nome) {
@@ -34,30 +26,6 @@ public class Astnode {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getOp() {
-		return op;
-	}
-	public void setOp(String op) {
-		this.op = op;
-	}
-	public int getTipo() {
-		return tipo;
-	}
-	public void setTipo(int tipo) {
-		this.tipo = tipo;
-	}
-	public String getLexema() {
-		return lexema;
-	}
-	public void setLexema(String lexema) {
-		this.lexema = lexema;
-	}
-	public float getValor() {
-		return valor;
-	}
-	public void setValor(float valor) {
-		this.valor = valor;
-	}
 	
 	public void addFilho(Astnode filho) {
 		filhos.add(filho);
@@ -69,5 +37,17 @@ public class Astnode {
 		}
 		retorno += "\n";
 		return retorno;
+	}
+
+	public String geraArvore(int nivel){
+		String arvore = "";
+		for (int i = 0; i < nivel*4; i++) arvore+=" ";
+		arvore+= "<AST>\n";
+		for (Astnode a: filhos){
+			arvore += a.geraArvore(nivel + 1);
+		}
+		for (int i = 0; i < nivel*4; i++) arvore+=" ";
+		arvore+= "</AST>\n";
+		return arvore;
 	}
 }

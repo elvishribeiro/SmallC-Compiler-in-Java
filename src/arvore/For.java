@@ -50,5 +50,22 @@ public class For extends Astnode {
 	public void addFilho(Astnode filho){
 		this.c_true = filho;
 	}
+
+	public String geraArvore(int nivel){
+		String arvore = "";
+		for (int i = 0; i < nivel*4; i++) arvore+=" ";
+		arvore+= "<For>\n";
+		arvore+= ini.geraArvore(nivel + 1);
+		arvore+= condicao.geraArvore(nivel + 1);
+		arvore+= inc.geraArvore(nivel + 1);
+		arvore+=c_true.geraArvore(nivel + 1);
+		for (int i = 0; i < nivel*4; i++) arvore+=" ";
+		arvore+= "</For>\n";
+		return arvore;
+	}
+
+	public String toString(){
+		return "" + ini +" "+ condicao +" "+ inc +" "+ c_true;
+	}
 	
 }
