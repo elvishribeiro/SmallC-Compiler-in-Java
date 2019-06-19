@@ -44,16 +44,33 @@ public class If extends Astnode{
 		arvore+= "<If>\n";
 		arvore+= e.geraArvore(nivel + 1);
 		arvore+= c_true.geraArvore(nivel + 1);
-		arvore+= c_false.geraArvore(nivel + 1);
+		if (c_false != null)
+			arvore+= c_false.geraArvore(nivel + 1);
 		for (int i = 0; i < nivel*4; i++) arvore+=" ";
 		arvore+= "</If>\n";
 		return arvore;
 	}
 
+	public String geraCodigo(int nivel){
+		String codigo = "";
+		for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
+
+		codigo += "if " + e.geraCodigo(0) +":\n";
+		codigo += c_true.geraCodigo(nivel + 1) + "\n";
+		
+		if (c_false != null){
+			for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
+			codigo += "else:\n";
+			codigo += c_false.geraCodigo(nivel + 1) + "\n";
+		}
+
+		return codigo;
+	}
 	
 	public String toString () {
 		String resultado = "";
 		resultado += e + " - " + c_true + " - " + c_false;
 		return resultado;
 	}
+
 }

@@ -21,11 +21,11 @@ public class AnalisadorSintatico {
 		return instance;
 	}
 
-	public Hashtable<String,Simbolo> analisa(ArrayList<Token> tokens) {
+	public Astnode analisa(ArrayList<Token> tokens) {
 		this.tokens = tokens;
 		tokenEntrada = this.tokens.get(0);
 		programa();
-		return tabelaSimbolos;
+		return raiz;
 	}
 
 	private void programa() {
@@ -38,8 +38,6 @@ public class AnalisadorSintatico {
 		decl_Comando(raiz);
 		casa("RBRACE");
 		//System.out.println(raiz.getFilhos());
-		String a  = raiz.geraArvore(0);
-		System.out.println(a);
 	}
 	
 	private void decl_Comando(Astnode pai) {
@@ -193,9 +191,8 @@ public class AnalisadorSintatico {
 
 	private void comandoRead(Astnode pai){
 		//printf("ComandoRead-> "); //remover
-		Simbolo s = tabelaSimbolos.get(tokenEntrada.getLexema());
-
 		casa("READ");
+		Simbolo s = tabelaSimbolos.get(tokenEntrada.getLexema());
 		Read noRead = new Read();
 		Id noId = new Id();
 		noId.setSimbolo(s);
@@ -212,7 +209,7 @@ public class AnalisadorSintatico {
 		casa("LBRACKET");
 		Expr e = expressao();
 		casa("RBRACKET");
-		// noPrint.setE(e);
+		noPrint.setExpr(e);
 		casa("PCOMMA");
 		pai.addFilho(noPrint);
 	}

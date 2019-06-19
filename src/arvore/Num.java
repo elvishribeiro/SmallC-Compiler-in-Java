@@ -32,8 +32,18 @@ public class Num extends Expr{
 
 	public String geraArvore(int nivel){
 		String arvore = "";
+		String tipoString = "";
 		for (int i = 0; i < nivel*4; i++) arvore+=" ";
-		arvore+= "<Num value="+ valor+" type='"+tipo+"' />\n";
+		if (tipo == 0) tipoString = "INT";
+		else tipoString = "FLOAT";
+		arvore+= "<Num value="+ valor+" type='"+tipoString+"' />\n";
 		return arvore;
+	}
+
+	public String geraCodigo(int nivel){
+		String codigo = "";
+		for (int i = 0; i < nivel*4; i++) codigo+=" ";
+		codigo += valor;
+		return codigo;
 	}
 }

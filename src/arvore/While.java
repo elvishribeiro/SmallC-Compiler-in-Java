@@ -34,4 +34,16 @@ public class While extends Astnode{
 		resultado += e + " - " + c_true;
 		return resultado;
 	}
+
+	public String geraArvore(int nivel){
+		String arvore = "";
+		for(int i = 0; i < nivel*4; i++) arvore+= " ";
+		arvore += "<While>\n";
+		arvore += e.geraArvore(nivel + 1);
+		arvore += c_true.geraArvore(nivel + 1);
+		for(int i = 0; i < nivel*4; i++) arvore+= " ";
+		arvore += "</While>\n";
+		
+		return arvore;
+	}
 }

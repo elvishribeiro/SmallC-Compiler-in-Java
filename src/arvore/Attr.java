@@ -41,5 +41,11 @@ public class Attr extends Astnode{
 		return arvore;
 	}
 	
+	public String geraCodigo(int nivel){
+		String codigo = "";
+		for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
+		codigo += id.geraCodigo(0) + " = " + e.geraCodigo(0);
+		return codigo;
+	}
 	
 }

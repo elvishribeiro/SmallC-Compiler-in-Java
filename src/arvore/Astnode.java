@@ -7,7 +7,7 @@ public class Astnode {
 	protected String nome;
 	
 	public Astnode() {
-		this.nome = "Astnode";
+		this.nome = "AST";
 	}
 	
 	public Astnode(String nome) {
@@ -42,12 +42,21 @@ public class Astnode {
 	public String geraArvore(int nivel){
 		String arvore = "";
 		for (int i = 0; i < nivel*4; i++) arvore+=" ";
-		arvore+= "<AST>\n";
+		arvore+= "<"+nome+">\n";
 		for (Astnode a: filhos){
 			arvore += a.geraArvore(nivel + 1);
 		}
 		for (int i = 0; i < nivel*4; i++) arvore+=" ";
-		arvore+= "</AST>\n";
+		arvore+= "</"+nome+">\n";
 		return arvore;
+	}
+
+	public String geraCodigo(int nivel){
+		String codigo = "";
+		for (Astnode a: filhos){
+			codigo+= a.geraCodigo(nivel);
+		}
+		codigo+="\n";
+		return codigo;
 	}
 }

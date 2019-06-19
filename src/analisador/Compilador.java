@@ -1,4 +1,5 @@
 package analisador;
+import arvore.Astnode;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -9,8 +10,9 @@ public class Compilador {
 		AnalisadorSintatico as = AnalisadorSintatico.getInstance();
 		ArrayList<Token> tokens = al.analisa();
 		printTokens(tokens);
-		Hashtable<String, Simbolo> tabelaSimbolo = as.analisa(tokens);
-		System.out.println(tabelaSimbolo);		
+		Astnode raiz = as.analisa(tokens);
+		System.out.println(raiz.geraArvore(0));
+		System.out.println(raiz.geraCodigo(0));
 	}
 	
 	public static void printTokens(ArrayList<Token> tokens) {

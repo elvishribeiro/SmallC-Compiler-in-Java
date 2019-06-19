@@ -32,4 +32,12 @@ public class Id extends Expr{
 		arvore+= "<Id lexema='"+ simbolo.getLexema() + "' type='" +simbolo.getTipo() + "'/>\n";
 		return arvore;
 	}
+
+	public String geraCodigo(int nivel){
+		String codigo = "";
+		for (int i = 0; i < nivel*4; i++) codigo+=" ";
+		codigo += simbolo.getLexema();
+		return codigo;
+
+	}
 }

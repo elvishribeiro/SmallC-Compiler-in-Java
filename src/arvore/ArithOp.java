@@ -43,4 +43,22 @@ public class ArithOp extends Expr{
 		arvore+= "</ArithOp>\n";
 		return arvore;
 	}
+
+	public String geraCodigo(int nivel){
+		String codigo = "";
+		for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
+
+		if (expr1 instanceof Id || expr1 instanceof Num)       //se for id ou num nao precisa colocar parenteses
+			codigo += expr1.geraCodigo(0);	
+		else
+			codigo += "(" + expr1.geraCodigo(0) +")";
+			
+		codigo += " " + op + " ";
+
+		if (expr2 instanceof Id || expr2 instanceof Num)
+			codigo += expr2.geraCodigo(0);	
+		else
+		codigo += "(" + expr2.geraCodigo(0) +")";
+		return codigo;
+	}
 }
