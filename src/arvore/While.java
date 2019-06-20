@@ -46,4 +46,14 @@ public class While extends Astnode{
 		
 		return arvore;
 	}
+
+	public String geraCodigo(int nivel){
+		String codigo = "";
+		for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
+
+		codigo += "while " + e.geraCodigo(0) +":\n";
+		codigo += c_true.geraCodigo(nivel + 1); 
+
+		return codigo;
+	}
 }

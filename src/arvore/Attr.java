@@ -12,7 +12,7 @@ public class Attr extends Astnode{
 	}
 	
 	public Attr(Id id, Expr e) {
-		this.nome = this.getClass().getName();
+		this.nome = "Attr";
 		this.id = id;
 		this.e = e;
 	}
@@ -47,5 +47,14 @@ public class Attr extends Astnode{
 		codigo += id.geraCodigo(0) + " = " + e.geraCodigo(0);
 		return codigo;
 	}
+
+	//Caso um dia seja implementada a visão gráfica da árvore
+	/*public String geraDot(int nivel, int num){
+		int Fnum = 0;
+		String dot = "Attr" + nivel + num+" -> Id" + (nivel+1)+Fnum+"()\n";
+		Fnum++;
+		dot += "Attr" + nivel + num + " -> " + e.nome + ""+ (nivel+1)+Fnum+"\n"; 
+		return dot;
+	}*/
 	
 }

@@ -323,10 +323,10 @@ public class AnalisadorSintatico {
 		if (tokenEntrada.getNome().equals("PLUS") || tokenEntrada.getNome().equals("MINUS")){
 			opAdicao(pai);
 			ArithOp noArithOp = new ArithOp();
-			Expr expr1 = fator();
+			Expr expr1 = termo();
 			noArithOp.setExpr1(expr1);
 			
-			Expr expr2 = termoOpc(noArithOp);
+			Expr expr2 = adicaoOpc(noArithOp);
 			noArithOp.setExpr2(expr2);
 			
 			if (expr2 == null) {
@@ -369,7 +369,7 @@ public class AnalisadorSintatico {
 		if (tokenEntrada.getNome().equals("MULT") || tokenEntrada.getNome().equals("DIV")){
 			opMult(pai);
 			ArithOp noArithOp = new ArithOp();
-			Expr expr1 = fator();
+			Expr expr1 = termo();
 			noArithOp.setExpr1(expr1);
 			
 			Expr expr2 = termoOpc(noArithOp);
@@ -435,7 +435,8 @@ public class AnalisadorSintatico {
 
 			return true;
 		} else {
-			System.out.println("ESPERADO " + tokenEsperado + " ANTES DE " + tokenEntrada.getNome() + ".\n");
+			System.out.println("ESPERADO " + tokenEsperado + " ANTES DE " + tokenEntrada.getNome() + 
+					" na linha: " +tokenEntrada.getLinha()+ ".\n");
 			return false;
 		}
 	}

@@ -5,15 +5,15 @@ import java.util.ArrayList;
 public class Astnode {
 	private ArrayList<Astnode> filhos = new ArrayList<Astnode>();
 	protected String nome;
-	
+
 	public Astnode() {
 		this.nome = "AST";
 	}
-	
+
 	public Astnode(String nome) {
 		this.nome = nome;
 	}
-	
+
 	public ArrayList<Astnode> getFilhos() {
 		return filhos;
 	}
@@ -26,7 +26,7 @@ public class Astnode {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
 	public void addFilho(Astnode filho) {
 		filhos.add(filho);
 	}
@@ -55,8 +55,27 @@ public class Astnode {
 		String codigo = "";
 		for (Astnode a: filhos){
 			codigo+= a.geraCodigo(nivel);
+				codigo += "\n";
 		}
-		codigo+="\n";
+		//codigo+="\n";
 		return codigo;
 	}
+
+	
+	//Caso um dia seja implementada a visão gráfica da árvore
+	/*public String geraDot(int nivel, int num){
+		String dot = "";
+		
+		int Fnum = 0;
+		for (Astnode a: filhos){
+			dot+= "Astnode" + nivel + num+" -> " + a.nome + ""+(nivel+1)+Fnum +"\n";
+			Fnum++;
+		}
+		Fnum=0;
+		for (Astnode a: filhos){
+			dot += a.geraDot(nivel + 1, Fnum++);
+		}
+
+		return dot;
+	}*/
 }

@@ -68,4 +68,14 @@ public class For extends Astnode {
 		return "" + ini +" "+ condicao +" "+ inc +" "+ c_true;
 	}
 	
+	public String geraCodigo(int nivel){
+		String codigo = "";
+		for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
+		codigo += ini.geraCodigo(nivel) + "\n";
+		codigo += "while " + condicao.geraCodigo(0) +":\n";
+		codigo += c_true.geraCodigo(nivel + 1); 
+		codigo += inc.geraCodigo(nivel + 1);
+
+		return codigo;
+	}
 }

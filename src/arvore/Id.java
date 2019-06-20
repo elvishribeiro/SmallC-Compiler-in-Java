@@ -10,8 +10,9 @@ public class Id extends Expr{
 	}
 	
 	public Id(Simbolo simbolo) {
-		this.nome = this.getClass().getName();
+		this.nome = "Id";
 		this.simbolo = simbolo;
+		this.lexema = simbolo.getLexema();
 	}
 
 	public Simbolo getSimbolo() {
@@ -20,6 +21,7 @@ public class Id extends Expr{
 
 	public void setSimbolo(Simbolo simbolo) {
 		this.simbolo = simbolo;
+		this.lexema = simbolo.getLexema();
 	}
 	
 	public String toString() {

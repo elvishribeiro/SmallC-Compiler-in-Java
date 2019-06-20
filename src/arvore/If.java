@@ -56,9 +56,12 @@ public class If extends Astnode{
 		for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
 
 		codigo += "if " + e.geraCodigo(0) +":\n";
-		codigo += c_true.geraCodigo(nivel + 1) + "\n";
+		codigo += c_true.geraCodigo(nivel + 1);
 		
 		if (c_false != null){
+	        //if (!c_true.getNome().equals("Bloco")) {
+	        	codigo += "\n";
+	        //}
 			for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
 			codigo += "else:\n";
 			codigo += c_false.geraCodigo(nivel + 1) + "\n";

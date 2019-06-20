@@ -13,6 +13,7 @@ public class Num extends Expr{
     public Num(Float valor, int tipo) {
     	this.valor = valor;
     	this.tipo = tipo;
+    	this.nome = "Num";
     }
 
 	public float getValor() {

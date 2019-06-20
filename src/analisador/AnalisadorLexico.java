@@ -24,8 +24,9 @@ public class AnalisadorLexico {
 		return instance;
 	}
 	
-	public ArrayList<Token> analisa() throws Exception{
-		File file = new File("teste.c"); 
+	public ArrayList<Token> analisa(String arqNome) throws Exception{
+		
+		File file = new File(arqNome); 
 		  
 		Scanner reader = new Scanner(file);
 		char c = '\0';
@@ -156,6 +157,7 @@ public class AnalisadorLexico {
 					tokens.add(new Token(Token.lexemaToToken(lexema), linha, lexema));
 				}
 				state = 0;
+				ler = false;
 				break;
 			
 			case 5:

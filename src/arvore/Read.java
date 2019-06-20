@@ -26,4 +26,14 @@ public class Read extends Astnode{
 		
 		return arvore;
 	}
+	
+	public String geraCodigo(int nivel) {
+		String codigo = "";
+		for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
+		codigo += "float(input(\"Digite o valor da variável " + id.getLexema() +
+				":\" "+ id.getLexema() + "))";
+		
+
+		return codigo;
+	}
 }
