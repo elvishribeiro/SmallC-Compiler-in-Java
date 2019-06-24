@@ -80,12 +80,12 @@ public class AnalisadorSintatico {
 		if (tokenEntrada.getNome().equals("COMMA")){
 			casa("COMMA");
 			Token tokenBackup = tokenEntrada;
-			
 			if (casa("ID")){
 				if (!tabelaSimbolos.containsKey(tokenBackup.getLexema())){
 					Simbolo s = new Simbolo(tipo, tokenBackup.getLexema(), tokenBackup.getLinha());
 					tabelaSimbolos.put(s.getLexema(), s);
-					noId.setSimbolo(s);
+					//noId.setSimbolo(s);
+					noId = new Id(s);
 				}else{
 					System.out.println("REDECLARACAO DE " + tokenBackup.getLexema());
 				}
