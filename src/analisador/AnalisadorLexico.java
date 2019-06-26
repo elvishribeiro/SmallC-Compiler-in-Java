@@ -160,6 +160,7 @@ public class AnalisadorLexico {
 					tokens.add(new Token(Token.lexemaToToken(lexema), linha, lexema));
 				}
 				state = 0;
+				ler = false;
 				break;
 			
 			//Detecção de ID ou comando

@@ -70,10 +70,13 @@ public class For extends Astnode {
 	
 	public String geraCodigo(int nivel){
 		String codigo = "";
-		for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
+		//for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
 		codigo += ini.geraCodigo(nivel) + "\n";
+		
+		for (int i = 0; i < nivel*4; i++)codigo += " ";      //identacao
 		codigo += "while " + condicao.geraCodigo(0) +":\n";
-		codigo += c_true.geraCodigo(nivel + 1); 
+		
+		codigo += c_true.geraCodigo(nivel + 1)+"\n"; 
 		codigo += inc.geraCodigo(nivel + 1);
 
 		return codigo;
