@@ -7,7 +7,7 @@ This compiler compiles (with little unsolved bugs) C code and generates Python c
 
 ----
 
-> Este trabalho foi feito para a disciplina de Inteligência Artificial do 5º período do curso de Ciência da Computação da UFSJ<br/>
+> Este trabalho foi feito para a disciplina de Compiladores do 6º período do curso de Ciência da Computação da UFSJ<br/>
 ...<br/>
 **Integrantes do grupo:**<br/>
 *Elvis Hernandes Ribeiro*<br/>
